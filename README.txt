@@ -1,4 +1,4 @@
-#BH Extremal Project
+# BH Extremal Project
 
 Repo for black hole extremal project.
 
