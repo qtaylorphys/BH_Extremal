@@ -1,13 +1,14 @@
 import numpy as np
 from mpmath import polylog, zeta
 from scipy.optimize import root
-from scipy import interpolate
 
 from numbers import Real
 
 import numba as nb
 
 from interpolate import cubic_spline
+
+from time import process_time
 
 def CDF(x: Real) -> Real:
     if isinstance(x, (list, np.ndarray)): x = x[0]
@@ -38,7 +39,6 @@ def find_x_from_CDF(val: Real) -> Real:
     return res.x[0]
 
 @nb.njit(
-    cache = True,
     fastmath = True,
 )
 def compute_BH_evolution(
@@ -50,13 +50,14 @@ def compute_BH_evolution(
     M = M_init
     J = J_init
     i = 0
+    np.random.seed(1234)
+
+    result = np.empty((100000000000, 3))
 
     while M >= 1.:
-        print(i)
-
         a_star = J / M**2.
-        print(M, J, a_star)
-        print()
+
+        result[i, :] = M, J, a_star
         if np.abs(a_star) > 1. - eps:
             a_star = 1.
             break
@@ -65,19 +66,36 @@ def compute_BH_evolution(
 
         T = np.sqrt(1 - a_star**2) / (8 * np.pi * M * (1 + np.sqrt(1 - a_star**2)))
 
-        probs = np.random.rand()
-        rands = np.random.rand()
-
-        change = dist(probs)
+        change = dist(np.random.rand())
 
         M = M - change * T
 
-        if rho > rands:
+        if rho > np.random.rand():
             J = J - change * T
         else:
             J = J + change * T
 
         i += 1
+
+        # if i > 99999: print("Problem")
+
+    return result[:i+1, :]
+
+@nb.njit(
+    # fastmath = True,
+)
+def compute_BH_evolution_new(
+    M_init,
+    J_init,
+    eps,
+    dist,
+):
+    M = M_init
+    J = J_init
+    i = 0
+    np.random.seed(1234)
+
+    np.random.rand(100)
 
 if __name__ == "__main__":
     cdffunction = np.genfromtxt("cdffunction.csv")
@@ -89,12 +107,18 @@ if __name__ == "__main__":
     
     inv_CDF = cubic_spline(cdffunction, y_points)
     
-    init_M = 1000.
+    init_M = 2000.
     init_J = 0.
     eps = 1e-4
 
-    compute_BH_evolution(init_M, init_J, eps, inv_CDF)
-    
-    
-            
+    result = compute_BH_evolution(init_M, init_J, eps, inv_CDF)
+    compute_BH_evolution_new(init_M, init_J, eps, inv_CDF)
 
+    print(result[-1])
+    t1 = process_time()
+    result = compute_BH_evolution(init_M, init_J, eps, inv_CDF)
+    t2 = process_time()
+    compute_BH_evolution_new(init_M, init_J, eps, inv_CDF)
+    t3 = process_time()
+
+    print(t2 - t1, t3 - t2)
