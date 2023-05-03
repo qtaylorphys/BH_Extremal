@@ -37,10 +37,11 @@ def find_x_from_CDF(val: Real) -> Real:
     return res.x[0]
 
 if __name__ == "__main__":
-    x_vals = np.linspace(1e-16, 26, 1000000)
+    x_vals = np.linspace(1e-16, 23, 10000000)
     CDF_vals = CDF(x_vals)
 
     print(np.min(np.diff(CDF_vals)))
+    print(CDF_vals[-1])
 
     CDF_data = np.stack((CDF_vals, x_vals), axis=-1)
     np.savetxt("CDF_data_new.csv.gz", CDF_data)
