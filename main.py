@@ -50,7 +50,7 @@ def compute_BH_evolution(
 
         M = M - change * T
 
-        if rho_plus > rands[i]:
+        if rho_plus < rands[i]:
             J = J - 1
         else:
             J = J + 1
