@@ -25,11 +25,12 @@ def predict_size(M: Real, safe: bool = True) -> Integral:
 
 @nb.njit(fastmath = True)
 def compute_BH_evolution(
-    M_init,
-    J_init,
-    M_final,
+    M_init: float,
+    J_init: float,
+    M_final: float,
     changes,
     rands,
+    eps: float,
 ):
     M = M_init
     J = J_init

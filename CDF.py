@@ -1,4 +1,3 @@
-
 import numpy as np
 from mpmath import polylog, zeta
 from scipy.optimize import root
@@ -7,7 +6,7 @@ from numbers import Real
 
 
 @np.vectorize
-def CDF(x: Real) -> Real:    
+def CDF(x: Real) -> Real:
     cdf = (
         x**2 * np.log(1 - np.exp(-x))
         - 2 * (x * polylog(2, np.exp(-x)) + (polylog(3, np.exp(-x)) - zeta(3)))
