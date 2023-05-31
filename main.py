@@ -59,7 +59,7 @@ def compute_BH_evolution(
             J = J + 1
 
         i += 1
-        
+
     return M, J, a_star, i
 
 
@@ -91,12 +91,12 @@ if __name__ == "__main__":
 
     N = predict_size(init_M)
 
-    for _ in range(1):
+    for _ in range(10000):
         changes_array = inv_CDF_interp(np.random.rand(N))
         rands_array = np.random.rand(N)
 
         t1 = process_time()
-        M, J, a, n = compute_BH_evolution(
+        M, J, a_star, n = compute_BH_evolution(
             M_init, J_init,
             M_final,
             changes_array, rands_array,
@@ -108,7 +108,5 @@ if __name__ == "__main__":
             os.path.dirname(os.path.realpath(__file__)),
             f"results/test_M_{int(init_M)}.csv",
         ), "a") as f:
-            f.write(f"{init_M},{init_J},{M},{J},{a},{n},{t2-t1}\n")
-
-        # print(a)
+            f.write(f"{M_init},{J_init},{M},{J},{a_star},{n},{t2-t1}\n")
 
