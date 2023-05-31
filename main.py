@@ -89,7 +89,7 @@ if __name__ == "__main__":
 
     eps = args.eps
 
-    N = predict_size(init_M)
+    N = predict_size(M_init)
 
     for _ in range(10000):
         changes_array = inv_CDF_interp(np.random.rand(N))
