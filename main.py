@@ -65,13 +65,11 @@ def compute_BH_evolution(
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        prog="ExtremalBlackHoles",
+        prog="ExtremalPrimordialBlackHoles",
         description="Compute the evolution of PBHs",
     )
     parser.add_argument("-e", "--eps", type=float, default=1.)
     args = parser.parse_args()
-
-    print(args.eps)
 
     CDF_data = load_CDF_data(os.path.join(
         os.path.dirname(os.path.realpath(__file__)),
