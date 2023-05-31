@@ -106,7 +106,7 @@ if __name__ == "__main__":
 
         with open(os.path.join(
             os.path.dirname(os.path.realpath(__file__)),
-            f"results/test_M_{int(init_M)}.csv",
+            f"results/test_M_{int(M_init)}.csv",
         ), "a") as f:
             f.write(f"{M_init},{J_init},{M},{J},{a_star},{n},{t2-t1}\n")
 
