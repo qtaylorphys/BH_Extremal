@@ -3,6 +3,7 @@ import numpy as np
 import h5py
 import scipy.interpolate as spip
 from numbers import Real, Integral
+from nptyping import NDArray
 import numba as nb
 
 import os
@@ -32,24 +33,43 @@ def compute_BH_evolution(
     M_init: float,
     J_init: float,
     M_final: float,
-    changes,
-    rands,
+    changes: NDArray,
+    rands: NDArray,
     eps: float = 1,
+    return_path: bool = False,
 ):
     M = M_init
     J = J_init
     i = 0
+    extremal = False
+
+    if return_path:
+        M_path = []
+        J_path = []
+        a_star_path = []
+        rho_plus_path = []
+        T_path = []
 
     while M >= M_final:
         a_star = J / M**2.
 
         if np.abs(a_star) >= 1:
             a_star = np.sign(a_star) * 1.
-            break
+            extremal = True
+            
+        if return_path:
+            M_path.append(M)
+            J_path.append(J)
+            a_star_path.append(a_star)
 
         rho_plus = 1 / 2 + eps * (- a_star + a_star * np.abs(a_star) / 2)
-
         T = np.sqrt(1 - a_star**2) / (4 * np.pi * M * (1 + np.sqrt(1 - a_star**2)))
+
+        if return_path:
+            rho_plus_path.append(rho_plus)
+            T_path.append(T)
+
+        if extremal: break
 
         change = changes[i]
 
@@ -62,7 +82,24 @@ def compute_BH_evolution(
 
         i += 1
 
-    return M, J, a_star, i
+    extremal *= 1
+    n_steps = i + extremal
+
+    if return_path:
+        path = np.stack((
+            np.asarray(M_path),
+            np.asarray(J_path),
+            np.asarray(a_star_path),
+            np.asarray(rho_plus_path),
+            np.asarray(T_path),
+            rands[:n_steps],
+            changes[:n_steps]),
+            axis=-1,
+        )
+    else:
+        path = None
+
+    return M, J, a_star, n_steps, extremal, path
 
 
 if __name__ == "__main__":
@@ -81,7 +118,7 @@ if __name__ == "__main__":
 
     inv_CDF_interp = spip.CubicSpline(CDF_vals, x_vals)
 
-    M_init = 100.
+    M_init = 1000.
     J_init = 0.
     
     M_final = 1.
@@ -90,16 +127,20 @@ if __name__ == "__main__":
 
     N = predict_size(M_init)
 
-    for _ in range(10):
+    N_PBH = 10
+    zfill_len = int(np.log10(N_PBH)) + 1
+
+    for i in range(N_PBH):
         changes_array = inv_CDF_interp(np.random.rand(N))
         rands_array = np.random.rand(N)
 
         t1 = process_time()
-        M, J, a_star, n = compute_BH_evolution(
+        M, J, a_star, n, extremal, path = compute_BH_evolution(
             M_init, J_init,
             M_final,
             changes_array, rands_array,
             eps,
+            False,
         )
         t2 = process_time()
 
@@ -107,5 +148,13 @@ if __name__ == "__main__":
             os.path.dirname(os.path.realpath(__file__)),
             f"results/test_M_{int(M_init)}.csv",
         ), "a") as f:
-            f.write(f"{M_init},{J_init},{M},{J},{a_star},{n},{t2-t1}\n")
+            f.write(f"{M_init},{J_init},{M},{J},{a_star},{n},{t2-t1:.3e}\n")
 
+            if path is not None:
+                with h5py.File(f"./path{str(i).zfill(zfill_len)}.h5", 'w') as f:
+                    f.create_dataset(
+                        "path",
+                        data=path,
+                        compression="gzip",
+                        compression_opts=9,
+                    )
