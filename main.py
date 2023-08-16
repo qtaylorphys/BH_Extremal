@@ -1,5 +1,6 @@
 import argparse
 import numpy as np
+import h5py
 import scipy.interpolate as spip
 from numbers import Real, Integral
 import numba as nb
@@ -9,7 +10,8 @@ from time import process_time
 
 
 def load_CDF_data(filename: str):
-    CDF_data = np.loadtxt(filename, delimiter=",")
+    with h5py.File(filename,'r') as f:
+        CDF_data = f["CDF_data"][:]
     return CDF_data
 
 def predict_size(M: Real, safe: bool = True) -> Integral:
@@ -72,7 +74,7 @@ if __name__ == "__main__":
 
     CDF_data = load_CDF_data(os.path.join(
         os.path.dirname(os.path.realpath(__file__)),
-        "CDF_data.csv",
+        "CDF_data.h5",
     ))
     CDF_vals = CDF_data[:, 0]
     x_vals = CDF_data[:, 1]
