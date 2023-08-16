@@ -89,7 +89,7 @@ if __name__ == "__main__":
 
     N = predict_size(M_init)
 
-    for _ in range(10000):
+    for _ in range(10):
         changes_array = inv_CDF_interp(np.random.rand(N))
         rands_array = np.random.rand(N)
 
