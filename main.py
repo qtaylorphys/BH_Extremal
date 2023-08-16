@@ -65,7 +65,6 @@ def compute_BH_evolution(
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        prog="ExtremalPrimordialBlackHoles",
         description="Compute the evolution of PBHs",
     )
     parser.add_argument("-e", "--eps", type=float, default=1.)
