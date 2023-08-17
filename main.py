@@ -9,6 +9,8 @@ import numba as nb
 import os
 from time import process_time
 
+from interpolate import cubic_spline
+
 
 def load_CDF_data(filename: str):
     with h5py.File(filename,'r') as f:
@@ -27,6 +29,14 @@ def predict_size(M: Real, safe: bool = True) -> Integral:
 
     N_predict = int(np.ceil(N_predict))
     return N_predict
+
+@nb.njit(fastmath = True)
+def compute_interp(f, x):
+    y = x.argsort()
+    z = f(x[y])
+    i = np.empty_like(y)
+    i[y] = np.arange(y.size)
+    return z[i]
 
 @nb.njit(fastmath = True)
 def compute_BH_evolution(
@@ -118,6 +128,8 @@ if __name__ == "__main__":
 
     inv_CDF_interp = spip.CubicSpline(CDF_vals, x_vals)
 
+    new_cs = cubic_spline(CDF_vals, x_vals)
+
     M_init = 1000.
     J_init = 0.
     
@@ -127,11 +139,29 @@ if __name__ == "__main__":
 
     N = predict_size(M_init)
 
-    N_PBH = 10
+    N_PBH = 100
     zfill_len = int(np.log10(N_PBH)) + 1
 
     for i in range(N_PBH):
-        changes_array = inv_CDF_interp(np.random.rand(N))
+        print(i)
+        rands = np.random.uniform(
+            size=N,
+            low=CDF_vals[0],
+            high=CDF_vals[-1],
+        )
+
+        t1 = process_time()
+        changes_array = inv_CDF_interp(rands)
+        t2 = process_time()
+        # changes_array2 = compute_interp(new_cs, rands)
+
+        # print(np.max(np.abs(changes_array - changes_array2)))
+        # j = np.argmax(np.abs(changes_array - changes_array2))
+        # print(rands_array0[j], changes_array[j], changes_array2[j])
+        # print(t3 - t2, t2 - t1)
+        # print()
+        print(t2 - t1)
+        
         rands_array = np.random.rand(N)
 
         t1 = process_time()
