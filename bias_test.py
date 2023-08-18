@@ -31,16 +31,14 @@ def compute_BH_evolution(
     changes,
     rands,
     eps,
-    trajM,
-    trajJ,
 ):
     M = M_init
     J = J_init
     i = 0
     eps = eps #Factor that will turn on the bias
     
-    while np.abs(J / M**2) <= 2:
-        a_star = J / M**2 
+    while M >= M_final:
+        a_star = J / M**2.
 
         if a_star >= 1:
             a_star = 1.
@@ -50,8 +48,8 @@ def compute_BH_evolution(
             break
 
         
-        rho_plus = 1/2 - a_star + a_star * np.abs(a_star) / 2
-        #rho_plus = 1 / 2  + eps * (-a_star + a_star * np.abs(a_star) / 2)
+        #rho_plus = 1/2 - a_star + a_star * np.abs(a_star) / 2
+        rho_plus = 1 / 2  + eps * (-a_star + a_star * np.abs(a_star) / 2)
 
         T = np.sqrt(1 - a_star**2) / (4 * np.pi * M * (1 + np.sqrt(1 - a_star**2)))
 
@@ -64,11 +62,9 @@ def compute_BH_evolution(
         else:
             J = J + 1
 
-        trajM[i] = M
-        trajJ[i] = J
         i += 1
 
-    return trajM, trajJ
+    return M, J, a_star, i
 
 
 if __name__ == "__main__":
@@ -81,9 +77,9 @@ if __name__ == "__main__":
     init_M = 100.
     init_J = 0.
 
-    eps=0.0 
+    eps=0.5 
     
-    M_final = 1.0
+    M_final = 1.
 
     N = predict_size(100)
     changes_array = inv_CDF_interp(np.random.rand(N))
@@ -92,13 +88,11 @@ if __name__ == "__main__":
     # compile the function
     # _, _, _, _ = compute_BH_evolution(100., 0., M_final, changes_array, rands_array)
 
-    for _ in range(100): 
+    for _ in range(2000):
         N = predict_size(init_M)
 
         changes_array = inv_CDF_interp(np.random.rand(N))
         rands_array = np.random.rand(N)
-        trajM = np.empty(N)
-        trajJ = np.empty(N)
 
         
         
@@ -106,12 +100,10 @@ if __name__ == "__main__":
         M, J, a, n = compute_BH_evolution(init_M, init_J, M_final, changes_array, rands_array, eps)
         t2 = process_time()
 
-         
-        with open(f"/home/qxt42/Documents/PBH_Extremal/Outputs/TrajMass_{int(init_M)}.txt", "a") as f:
+        b=0.5*100 
+        with open(f"/home/qxt42/Documents/PBH_Extremal/bias{int(b)}_M_{int(init_M)}.txt", "a") as f:
            f.write(f"{init_M},{init_J},{M},{J},{a},{n},{t2-t1}\n")
-            #f.write(f"{trajM}\n")
 
-
-        #with open(f"/home/qxt42/Documents/PBH_Extremal/TrajJ_{int(init_M)}.txt", "a") as g:
-            #g.write(f"{trajJ}\n")
+        #with open(f"/home/qxt42/Documents/PBH_Extremal/test_ang_{int(init_M)}.txt", "a") as f:
+        #    f.write(ang)
 
