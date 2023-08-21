@@ -17,6 +17,7 @@ def load_CDF_data(filename: str):
         CDF_data = f["CDF_data"][:]
     return CDF_data
 
+@nb.njit(fastmath = True)
 def predict_size(M: Real, safe: bool = True) -> Integral:
     log_log_intercept = 0.6643894764405784
     log_log_coef = 2.0030406770689377
@@ -25,7 +26,7 @@ def predict_size(M: Real, safe: bool = True) -> Integral:
     log_N_predict = log_log_intercept + log_log_coef * log_M
     N_predict = 10**log_N_predict
 
-    if safe: N_predict *= 2
+    if safe: N_predict *= 1.2
 
     N_predict = int(np.ceil(N_predict))
     return N_predict
@@ -161,7 +162,7 @@ if __name__ == "__main__":
         # print(t3 - t2, t2 - t1)
         # print()
         print(t2 - t1)
-        
+
         rands_array = np.random.rand(N)
 
         t1 = process_time()
