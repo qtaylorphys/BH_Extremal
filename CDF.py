@@ -1,6 +1,6 @@
 import argparse
 import numpy as np
-from mpmath import polylog, zeta
+from mpmath import polylog, zeta, mp
 from scipy.optimize import root
 import scipy.interpolate as spip
 from time import process_time
@@ -15,6 +15,8 @@ from nptyping import NDArray
 
 @np.vectorize
 def CDF(x: Real) -> Real:
+    mp.dps = 20
+
     cdf = (
         x**2 * np.log(1 - np.exp(-x))
         - 2 * (x * polylog(2, np.exp(-x)) + (polylog(3, np.exp(-x)) - zeta(3)))
@@ -36,7 +38,7 @@ def find_x_from_CDF(val: Real) -> Real:
         args=(val),
         method='lm',
         jac=None,
-        tol=1e-17,
+        tol=1e-12,
         callback=None,
         options=None,
     )
@@ -87,10 +89,10 @@ if __name__ == "__main__":
     N = int(args.size)
 
     x_min = 1e-16
-    x_max = 23.0
+    x_max = 23.75
 
     x_vals = np.linspace(x_min, x_max, N)
-    print(f"Generated {N} equally spaced values between {x_min:.1e} and {x_max:.1e}")
+    print(f"Generated {N} equally spaced values between {x_min:.1e} and {x_max:.3e}")
 
     t_start = process_time()
     CDF_vals = CDF(x_vals)
