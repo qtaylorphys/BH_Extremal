@@ -27,7 +27,19 @@ def load_CDF_data(filename: str) -> NDArray[np.float64]:
     return CDF_data
 
 @nb.njit(fastmath = True)
-def predict_size(M: Real, safe: bool = True) -> Integral:
+def predict_size(M: Real, extra_factor: Real = 1.) -> Integral:
+    """
+    Predict the size of the arrays changes and rands needed for the 
+    compute_BH_evolution function. The parameters within are derived in 
+    the predict_size.ipynb notebook.
+
+    Parameters:
+    M (Real): the initial mass of the black hole (in Planck masses)
+    extra_factor (Real): extra factor for multiplying the size
+
+    Returns:
+    Integral: the predicted size for the arrays
+    """
     log_log_intercept = 0.6643894764405784
     log_log_coef = 2.0030406770689377
 
@@ -35,7 +47,8 @@ def predict_size(M: Real, safe: bool = True) -> Integral:
     log_N_predict = log_log_intercept + log_log_coef * log_M
     N_predict = 10**log_N_predict
 
-    if safe: N_predict *= 1.2
+    N_predict *= 1.05
+    N_predict *= extra_factor
 
     N_predict = int(np.ceil(N_predict))
     return N_predict
