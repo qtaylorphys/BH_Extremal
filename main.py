@@ -91,7 +91,8 @@ def compute_BH_evolution(
     Integral: the number of random steps taken
     bool: whether the black hole became extremal
     path: if return_path is True, contains the values of M, J, a_star, 
-        rho_plus, T, rands, changes as an array of shape (n_steps, 7)
+        rho_plus, T, rands, changes as an array of shape (n_steps, 7); 
+        else None
     """
     M = M_init
     J = J_init
@@ -159,6 +160,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Compute the evolution of PBHs",
     )
+    parser.add_argument("-s", "--spacetime", type=str, default="Kerr")
     parser.add_argument("-e", "--eps", type=float, default=1.)
     args = parser.parse_args()
 
@@ -173,7 +175,7 @@ if __name__ == "__main__":
 
     new_cs = cubic_spline(CDF_vals, x_vals)
 
-    spacetime = "Kerr"
+    spacetime = args.spacetime
 
     M_init = 1000.
     J_init = 0
