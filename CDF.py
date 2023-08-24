@@ -15,6 +15,16 @@ from nptyping import NDArray
 
 @np.vectorize
 def CDF(x: Real) -> Real:
+    """
+    Compute the cumulative density function (CDF) of the black body 
+    distribution; for derivation see Mathematica_files/CDF_derivation.nb
+
+    Parameters:
+    x (Real): argument of the CDF, equal to E/T
+
+    Returns:
+    Real: the value of the CDF
+    """
     mp.dps = 20
 
     cdf = (
