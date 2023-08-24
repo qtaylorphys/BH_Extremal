@@ -34,7 +34,6 @@ def Kerr_T(M: Real, a_star: Real, *_: Tuple[Any]) -> Real:
     T = np.sqrt(1 - a_star**2) / (4 * np.pi * M * (1 + np.sqrt(1 - a_star**2)))
     return T
 
-@nb.njit
 def Hawking_temperature(spacetime: str) -> Callable:
     """
     Returns a function for computing the Hawking temperature of a spacetime
