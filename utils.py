@@ -46,6 +46,14 @@ def time_fmt(time_s: Real) -> str:
     )
 
 def save_data_h5(data: NDArray, filename: str, dataset_name: str) -> None:
+    """
+    Save a numpy array in an H5 file
+
+    Parameters:
+    data (NDArray): array to be saved to file
+    filename (str): path where the H5 file should be saved
+    dataset_name (str): string for the dataset name in the H5 file
+    """
     with h5py.File(filename, 'w') as f:
         f.create_dataset(
             dataset_name,
