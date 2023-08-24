@@ -15,20 +15,6 @@ from temperature import Hawking_temperature
 from interpolate import cubic_spline
 
 
-def load_CDF_data(filename: str) -> NDArray:
-    """
-    Load the tabulated CDF function from an H5 file
-
-    Parameters:
-    filename (str): path to the H5 file
-
-    Returns:
-    NDArray: the data in an array of shape (N, 2)
-    """
-    with h5py.File(filename,'r') as f:
-        CDF_data = f["CDF_data"][:]
-    return CDF_data
-
 @nb.njit(fastmath = True)
 def compute_interp(f, x):
     y = x.argsort()
