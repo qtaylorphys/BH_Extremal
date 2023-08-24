@@ -36,6 +36,17 @@ def CDF(x: Real) -> Real:
 
 @np.vectorize
 def invert_CDF(x: Real, val: Real) -> Real:
+    """
+    Function to aid root finding for the CDF, essentially the LHS of
+        CDF(x) - val = 0
+
+    Parameters:
+    x (Real): argument of the CDF, equal to E/T
+    val (Real): the value of the CDF to be inverted
+
+    Returns:
+    Real: the LHS of the above equation
+    """
     return CDF(x) - val
 
 @np.vectorize
