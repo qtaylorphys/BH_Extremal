@@ -42,6 +42,9 @@ def Hawking_temperature(spacetime: str) -> Callable:
     Parameters:
     spacetime (str): the spacetime of the black hole; should be one of 
         "Schwarzschild", "Kerr"
+
+    Returns:
+    Callable: a function to compute the Hawking temperature
     """
     if spacetime == "Schwarzschild":
         return Schwarzschild_T
