@@ -4,6 +4,16 @@ from numbers import Real
 from nptyping import NDArray
 
 def binary_size(num: Real, suffix: str = "B") -> str:
+    """
+    Return human-readable string from file size in bytes
+
+    Parameters:
+    num (Real): the size of the file in bytes
+    suffix (str): the suffix to use after the units
+
+    Returns:
+    str: a human-readable string for the size of the file
+    """
     for unit in ("", "Ki", "Mi", "Gi", "Ti", "Pi", "Ei", "Zi"):
         if abs(num) < 1024.0:
             return f"{num:3.1f} {unit}{suffix}"
