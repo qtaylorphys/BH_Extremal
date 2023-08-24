@@ -3,7 +3,7 @@ import numpy as np
 import h5py
 import scipy.interpolate as spip
 from numbers import Real, Integral
-from typing import Callable
+from typing import Tuple, Callable
 from nptyping import NDArray
 import numba as nb
 
@@ -11,10 +11,11 @@ import os
 from time import process_time
 
 from predict_size import predict_size
+from temperature import Hawking_temperature
 from interpolate import cubic_spline
 
 
-def load_CDF_data(filename: str) -> NDArray[np.float64]:
+def load_CDF_data(filename: str) -> NDArray:
     """
     Load the tabulated CDF function from an H5 file
 
@@ -37,15 +38,21 @@ def compute_interp(f, x):
     return z[i]
 
 @nb.njit(fastmath = True)
+def compute_rho(a_star: Real, eps: Real) -> Real:
+    rho = 1 / 2 + eps * (- a_star + a_star * np.abs(a_star) / 2)
+    return rho
+
+@nb.njit(fastmath = True)
 def compute_BH_evolution(
     M_init: float,
     J_init: float,
     M_final: float,
+    compute_T: Callable,
     changes: NDArray,
     rands: NDArray,
     eps: float = 1,
     return_path: bool = False,
-):
+) -> Tuple:
     M = M_init
     J = J_init
     i = 0
@@ -70,8 +77,8 @@ def compute_BH_evolution(
             J_path.append(J)
             a_star_path.append(a_star)
 
-        rho_plus = 1 / 2 + eps * (- a_star + a_star * np.abs(a_star) / 2)
-        T = np.sqrt(1 - a_star**2) / (4 * np.pi * M * (1 + np.sqrt(1 - a_star**2)))
+        rho_plus = compute_rho(a_star, eps)
+        T = compute_T(M, a_star)
 
         if return_path:
             rho_plus_path.append(rho_plus)
@@ -128,6 +135,8 @@ if __name__ == "__main__":
 
     new_cs = cubic_spline(CDF_vals, x_vals)
 
+    spacetime = "Kerr"
+
     M_init = 1000.
     J_init = 0.
     
@@ -162,10 +171,13 @@ if __name__ == "__main__":
 
         rands_array = np.random.rand(N)
 
+        temperature_f = Hawking_temperature(spacetime)
+
         t1 = process_time()
         M, J, a_star, n, extremal, path = compute_BH_evolution(
             M_init, J_init,
             M_final,
+            temperature_f,
             changes_array, rands_array,
             eps,
             False,
