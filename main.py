@@ -58,14 +58,41 @@ def compute_rho(a_star: Real, eps: Real = 1.) -> Real:
 @nb.njit(fastmath = True)
 def compute_BH_evolution(
     M_init: float,
-    J_init: float,
+    J_init: Integral,
     M_final: float,
     compute_T: Callable,
     changes: NDArray,
     rands: NDArray,
-    eps: float = 1,
+    eps: Real = 1,
     return_path: bool = False,
 ) -> Tuple:
+    """
+    Compute the evolution of a (primordial) black hole as it evaporates due 
+    to Hawking radiation
+
+    Parameters:
+    M_init (Real): the initial mass of the black hole (in Planck masses)
+    J_init (Integral): the initial angular momentum of the black hole (in 
+        units of h-bar)
+    M_final (Real): the final mass of the black hole (in units of Planck 
+        masses)
+    compute_T (Callable): function which computes the Hawking temperature
+    changes (NDArray):
+    rands (NDArray):
+    eps (Real): tuning parameter used to control the deviation from even
+        probability (1/2); use eps = 1. for production results
+    return path (bool): if True, will return the evolution of M, J, a_star, 
+        rho_plus, T, as well as the rands and changes arrays
+
+    Returns:
+    Real: the final mass of the black hole
+    Real: the final angular momentum of the black hole
+    Real: the final value of a_star (equal to +/- 1 if extremal)
+    Integral: the number of random steps taken
+    bool: whether the black hole became extremal
+    path: if return_path is True, contains the values of M, J, a_star, 
+        rho_plus, T, rands, changes as an array of shape (n_steps, 7)
+    """
     M = M_init
     J = J_init
     i = 0
@@ -151,7 +178,7 @@ if __name__ == "__main__":
     spacetime = "Kerr"
 
     M_init = 1000.
-    J_init = 0.
+    J_init = 0
     
     M_final = 1.
 
