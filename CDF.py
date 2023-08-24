@@ -51,6 +51,17 @@ def invert_CDF(x: Real, val: Real) -> Real:
 
 @np.vectorize
 def find_x_from_CDF(val: Real) -> Real:
+    """
+    Performs root finding for the CDF, namely solving
+        CDF(x) = val
+    for x
+
+    Parameters:
+    val (Real): the RHS of the above equation
+
+    Returns:
+    Real: the root of the above equation
+    """
     x0 = val
 
     res = root(
