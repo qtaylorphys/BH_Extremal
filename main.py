@@ -3,12 +3,14 @@ import numpy as np
 import h5py
 import scipy.interpolate as spip
 from numbers import Real, Integral
+from typing import Callable
 from nptyping import NDArray
 import numba as nb
 
 import os
 from time import process_time
 
+from predict_size import predict_size
 from interpolate import cubic_spline
 
 
@@ -25,33 +27,6 @@ def load_CDF_data(filename: str) -> NDArray[np.float64]:
     with h5py.File(filename,'r') as f:
         CDF_data = f["CDF_data"][:]
     return CDF_data
-
-@nb.njit(fastmath = True)
-def predict_size(M: Real, extra_factor: Real = 1.) -> Integral:
-    """
-    Predict the size of the arrays changes and rands needed for the 
-    compute_BH_evolution function. The parameters within are derived in 
-    the predict_size.ipynb notebook.
-
-    Parameters:
-    M (Real): the initial mass of the black hole (in Planck masses)
-    extra_factor (Real): extra factor for multiplying the size
-
-    Returns:
-    Integral: the predicted size for the arrays
-    """
-    log_log_intercept = 0.6643894764405784
-    log_log_coef = 2.0030406770689377
-
-    log_M = np.log10(M)
-    log_N_predict = log_log_intercept + log_log_coef * log_M
-    N_predict = 10**log_N_predict
-
-    N_predict *= 1.05
-    N_predict *= extra_factor
-
-    N_predict = int(np.ceil(N_predict))
-    return N_predict
 
 @nb.njit(fastmath = True)
 def compute_interp(f, x):
