@@ -12,6 +12,7 @@ from time import process_time
 
 from predict_size import predict_size
 from temperature import Hawking_temperature
+from utils import load_CDF_data
 from interpolate import cubic_spline
 
 
@@ -171,6 +172,7 @@ if __name__ == "__main__":
     eps = args.eps
 
     N = predict_size(M_init)
+    temperature_f = Hawking_temperature(spacetime)
 
     N_PBH = 100
     zfill_len = int(np.log10(N_PBH)) + 1
@@ -196,8 +198,6 @@ if __name__ == "__main__":
         print(t2 - t1)
 
         rands_array = np.random.rand(N)
-
-        temperature_f = Hawking_temperature(spacetime)
 
         t1 = process_time()
         M, J, a_star, n, extremal, path = compute_BH_evolution(
