@@ -38,7 +38,20 @@ def compute_interp(f, x):
     return z[i]
 
 @nb.njit(fastmath = True)
-def compute_rho(a_star: Real, eps: Real) -> Real:
+def compute_rho(a_star: Real, eps: Real = 1.) -> Real:
+    """
+    Compute the probability that the black hole spin will increase
+
+    Parameters:
+    a_star (Real): the angular momentum of the black hole divided by the 
+        mass squared (a_star = J / M**2)
+
+    eps (Real): tuning parameter used to control the deviation from even
+        probability (1/2); use eps = 1. for production results
+
+    Returns:
+    Real: probability
+    """
     rho = 1 / 2 + eps * (- a_star + a_star * np.abs(a_star) / 2)
     return rho
 
