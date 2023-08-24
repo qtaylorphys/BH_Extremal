@@ -12,7 +12,7 @@ from time import process_time
 from interpolate import cubic_spline
 
 
-def load_CDF_data(filename: str):
+def load_CDF_data(filename: str) -> NDArray[np.float64]:
     """
     Load the tabulated CDF function from an H5 file
 
