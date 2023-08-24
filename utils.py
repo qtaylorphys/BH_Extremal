@@ -1,4 +1,5 @@
 import h5py
+from dateutil.relativedelta import relativedelta as rd
 
 from numbers import Real
 from nptyping import NDArray
@@ -21,6 +22,15 @@ def binary_size(num: Real, suffix: str = "B") -> str:
     return f"{num:.1f} Yi{suffix}"
 
 def time_fmt(time_s: Real) -> str:
+    """
+    Return a human-readable string from time interval in seconds
+
+    Parameters:
+    time_s (Real): the time interval in seconds
+
+    Returns:
+    str: a human-readable string for the time interval
+    """
     intervals = ["days", "hours", "minutes", "seconds"]
     x = rd(seconds=time_s)
     vals = [getattr(x, k) for k in intervals]
