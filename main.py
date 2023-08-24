@@ -110,17 +110,15 @@ def compute_BH_evolution(
 
         if np.abs(a_star) >= 1:
             a_star = np.sign(a_star) * 1.
-            extremal = True
-            
-        if return_path:
-            M_path.append(M)
-            J_path.append(J)
-            a_star_path.append(a_star)
+            extremal = True            
 
         rho_plus = compute_rho(a_star, eps)
         T = compute_T(M, a_star)
 
         if return_path:
+            M_path.append(M)
+            J_path.append(J)
+            a_star_path.append(a_star)
             rho_plus_path.append(rho_plus)
             T_path.append(T)
 
