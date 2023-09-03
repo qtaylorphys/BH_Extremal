@@ -1,5 +1,6 @@
 import h5py
 from dateutil.relativedelta import relativedelta as rd
+from time import process_time
 
 from numbers import Real
 from nptyping import NDArray
@@ -75,3 +76,12 @@ def load_CDF_data(filename: str) -> NDArray:
     with h5py.File(filename,'r') as f:
         CDF_data = f["CDF_data"][:]
     return CDF_data
+
+def timing(func):
+    def wrapper(*args, **kwargs):
+        t1 = process_time()
+        result = func(*args, **kwargs)
+        t2 = process_time()
+        time = t2 - t1
+        return result, time
+    return wrapper
