@@ -78,6 +78,15 @@ def load_CDF_data(filename: str) -> NDArray:
     return CDF_data
 
 def timing(func):
+    """
+    Decorator for measuring execution time of functions
+
+    Parameters:
+    func (Callable): the function to be timed
+
+    Returns:
+    Callable: the function wrapped in the decorator
+    """
     def wrapper(*args, **kwargs):
         t1 = process_time()
         result = func(*args, **kwargs)
