@@ -94,3 +94,6 @@ def timing(func):
         time = t2 - t1
         return result, time
     return wrapper
+
+if __name__ == "__main__":
+    pass
