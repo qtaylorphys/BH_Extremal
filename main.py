@@ -12,7 +12,7 @@ from time import process_time
 
 from predict_size import predict_size
 from temperature import Hawking_temperature
-from utils import load_CDF_data
+from utils import load_CDF_data, timing
 from interpolate import cubic_spline
 
 
@@ -42,6 +42,7 @@ def compute_rho(a_star: Real, eps: Real = 1.) -> Real:
     rho = 1 / 2 + eps * (- a_star + a_star * np.abs(a_star) / 2)
     return rho
 
+@timing
 @nb.njit(fastmath = True)
 def compute_BH_evolution(
     M_init: float,
@@ -199,8 +200,8 @@ if __name__ == "__main__":
 
         rands_array = np.random.rand(N)
 
-        t1 = process_time()
-        M, J, a_star, n, extremal, path = compute_BH_evolution(
+        # t1 = process_time()
+        (M, J, a_star, n, extremal, path), time = compute_BH_evolution(
             M_init, J_init,
             M_final,
             temperature_f,
@@ -208,13 +209,13 @@ if __name__ == "__main__":
             eps,
             False,
         )
-        t2 = process_time()
+        print(time)
 
         with open(os.path.join(
             os.path.dirname(os.path.realpath(__file__)),
             f"results/test_M_{int(M_init)}.csv",
         ), "a") as f:
-            f.write(f"{M_init},{J_init},{M},{J},{a_star},{n},{t2-t1:.3e}\n")
+            f.write(f"{M_init},{J_init},{M},{J},{a_star},{n},{time:.3e}\n")
 
             if path is not None:
                 with h5py.File(f"./path{str(i).zfill(zfill_len)}.h5", 'w') as f:
