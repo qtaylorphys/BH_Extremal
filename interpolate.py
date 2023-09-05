@@ -12,9 +12,7 @@ spec = [
     ('d', float64[:]),
 ]
 
-@jitclass(
-    spec,
-)
+@jitclass(spec)
 class CubicSpline(object):
     def __init__(self, x0, y0):
         self.x0 = x0
