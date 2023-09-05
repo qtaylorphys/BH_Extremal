@@ -15,6 +15,8 @@ from temperature import Hawking_temperature
 from utils import load_CDF_data, timing
 from interpolate import cubic_spline
 
+from abc import ABC
+
 
 @nb.njit(fastmath = True)
 def compute_interp(f, x):
@@ -149,6 +151,9 @@ if __name__ == "__main__":
         description="Compute the evolution of PBHs",
     )
     parser.add_argument("-s", "--spacetime", type=str, default="Kerr")
+    parser.add_argument("-Minit", "--initial_mass", type=float, default=100.)
+    parser.add_argument("-Mfinal", "--final_mass", type=float, default=1.)
+    parser.add_argument("-Jinit", "--initial_mom", type=float, default=0.)
     parser.add_argument("-e", "--eps", type=float, default=1.)
     args = parser.parse_args()
 
