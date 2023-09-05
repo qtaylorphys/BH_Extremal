@@ -7,4 +7,3 @@ numpy==1.22.4
 numpy==1.24.4
 python_dateutil==2.8.2
 scipy==1.11.2
-timerit==1.1.0
