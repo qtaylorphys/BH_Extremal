@@ -8,6 +8,10 @@ from utils import timing, load_CDF_data
 from predict_size import predict_size
 from temperature import Hawking_temperature
 
+from numbers import Real, Integral
+from typing import Tuple, Callable
+from nptyping import NDArray
+
 
 @nb.njit(fastmath = True)
 def compute_interp(f, x):
