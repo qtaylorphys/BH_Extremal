@@ -1,7 +1,8 @@
-# BH Extremal Project
+# Extremal Kerr Black Holes
 
-Repo for black hole extremal project.
+This is the repo corresponding to the following paper.
 
 Current Branches:
 
 - Main
+  -main.py: Primary code that computes the evolution of black holes
