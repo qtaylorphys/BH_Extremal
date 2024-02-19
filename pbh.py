@@ -1,6 +1,8 @@
 from abc import ABC
 import numpy as np
 import numba as nb
+import os
+import scipy.interpolate as spip
 
 from numbers import Real
 
@@ -170,7 +172,23 @@ class PrimordialBlackHole(ABC):
         self.N = predict_size(self.M_init)
         self.temperature_f = Hawking_temperature(self.spacetime)
 
+        CDF_data = load_CDF_data(os.path.join(
+            os.path.dirname(os.path.realpath(__file__)),
+            "CDF_data.h5",
+        ))
+        self.CDF_values = CDF_data[:, 0]
+        self.x_values = CDF_data[:, 1]
+        self.inv_CDF_interp = spip.CubicSpline(CDF_vals, x_vals)
+
+    def _construct_rand_array(self) -> None:
+        self.rand_array = np.random.uniform(
+            size=self.N,
+            low=self.CDF_vals[0],
+            high=self.CDF_vals[-1],
+        )
+
     def evolve(self):
+
         (M, J, a_star, n, extremal, path), time = compute_evolution(
             self.M_init, self.M_final,
             self.J_init,
