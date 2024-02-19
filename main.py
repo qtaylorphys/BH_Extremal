@@ -1,14 +1,10 @@
 import argparse
 import numpy as np
 import h5py
-import scipy.interpolate as spip
 
 import os
-from time import process_time
 
 from pbh import PrimordialBlackHole
-from utils import load_CDF_data, timing
-from interpolate import cubic_spline
 
 
 if __name__ == "__main__":
