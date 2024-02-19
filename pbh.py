@@ -191,7 +191,9 @@ class PrimordialBlackHole(ABC):
         self.changes_array = self.inv_CDF_interp(self.rand_array)
 
     def evolve(self):
-
+        self._construct_rand_array()
+        self._construct_changes_array()
+        
         (M, J, a_star, n, extremal, path), time = compute_evolution(
             self.M_init, self.M_final,
             self.J_init,
