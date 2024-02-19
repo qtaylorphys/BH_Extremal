@@ -181,14 +181,14 @@ class PrimordialBlackHole(ABC):
         self.inv_CDF_interp = spip.CubicSpline(self.CDF_values, self.x_values)
 
     def _construct_rand_array(self) -> None:
-        self.rand_array = np.random.uniform(
+        self.rands_array = np.random.uniform(
             size=self.N,
-            low=self.CDF_vals[0],
-            high=self.CDF_vals[-1],
+            low=self.CDF_values[0],
+            high=self.CDF_values[-1],
         )
 
     def _construct_changes_array(self) -> None:
-        self.changes_array = self.inv_CDF_interp(self.rand_array)
+        self.changes_array = self.inv_CDF_interp(self.rands_array)
 
     def evolve(self) -> None:
         self._construct_rand_array()
