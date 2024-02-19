@@ -40,23 +40,20 @@ if __name__ == "__main__":
         args.eps,
     )
 
-    # N = predict_size(M_init)
-    # temperature_f = Hawking_temperature(spacetime)
-
     N_PBH = 100
     zfill_len = int(np.log10(N_PBH)) + 1
 
     for i in range(N_PBH):
         print(i)
-        rands = np.random.uniform(
-            size=N,
-            low=CDF_vals[0],
-            high=CDF_vals[-1],
-        )
+        # rands = np.random.uniform(
+        #     size=N,
+        #     low=CDF_vals[0],
+        #     high=CDF_vals[-1],
+        # )
 
-        t1 = process_time()
-        changes_array = inv_CDF_interp(rands)
-        t2 = process_time()
+        # t1 = process_time()
+        # changes_array = inv_CDF_interp(rands)
+        # t2 = process_time()
         # changes_array2 = compute_interp(new_cs, rands)
 
         # print(np.max(np.abs(changes_array - changes_array2)))
@@ -64,23 +61,25 @@ if __name__ == "__main__":
         # print(rands_array0[j], changes_array[j], changes_array2[j])
         # print(t3 - t2, t2 - t1)
         # print()
-        print(t2 - t1)
+        # print(t2 - t1)
 
-        rands_array = np.random.rand(N)
+        # rands_array = np.random.rand(N)
+
+        pbh.evolve()
 
         # t1 = process_time()
 
         with open(os.path.join(
             os.path.dirname(os.path.realpath(__file__)),
-            f"results/test_M_{int(M_init)}.csv",
+            f"results/test_M_{int(pbh.M_init)}.csv",
         ), "a") as f:
-            f.write(f"{M_init},{J_init},{M},{J},{a_star},{n},{time:.3e}\n")
+            f.write(f"{pbh.M_init},{pbh.J_init},{pbh.M_end},{pbh.J_end},{pbh.a_star_end},{pbh.n_steps},{pbh.computation_time:.3e}\n")
 
-            if path is not None:
+            if pbh.path is not None:
                 with h5py.File(f"./path{str(i).zfill(zfill_len)}.h5", 'w') as f:
                     f.create_dataset(
                         "path",
-                        data=path,
+                        data=pbh.path,
                         compression="gzip",
                         compression_opts=9,
                     )
