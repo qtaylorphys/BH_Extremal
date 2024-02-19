@@ -35,8 +35,8 @@ if __name__ == "__main__":
 
     pbh = PrimordialBlackHole(
         args.spacetime,
-        args.M_init, args.M_final,
-        args.J_init,
+        args.initial_mass, args.final_mass,
+        args.initial_mom,
         args.eps,
     )
 
