@@ -1,4 +1,5 @@
 import h5py
+import numpy as np
 from dateutil.relativedelta import relativedelta as rd
 from time import process_time
 
