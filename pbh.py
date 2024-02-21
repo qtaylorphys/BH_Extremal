@@ -114,6 +114,8 @@ def compute_evolution(
 
         change = changes[i]
 
+        # print(i, M, J, a_star, rho_plus, T, rands[i], change)
+
         M = M - change * T
 
         if rho_plus < rands[i]:
@@ -152,7 +154,7 @@ class PrimordialBlackHole(ABC):
         J_init: Real = 0,
         eps: Real = 1,
         save_path: bool = False,
-    ):
+    ) -> None:
         self.spacetime = spacetime
         self.M_init = M_init
         self.M_final = M_final
@@ -180,18 +182,19 @@ class PrimordialBlackHole(ABC):
         self.x_values = CDF_data[:, 1]
         self.inv_CDF_interp = spip.CubicSpline(self.CDF_values, self.x_values)
 
-    def _construct_rand_array(self) -> None:
-        self.rands_array = np.random.uniform(
-            size=self.N,
-            low=self.CDF_values[0],
-            high=self.CDF_values[-1],
-        )
+    def _construct_rands_array(self) -> None:
+        self.rands_array = np.random.default_rng().uniform(size=self.N)
 
     def _construct_changes_array(self) -> None:
-        self.changes_array = self.inv_CDF_interp(self.rands_array)
+        self.CDF_rands_array = np.random.default_rng().uniform(
+            size=self.N,
+            low=self.CDF_values[0] + 1e-18,
+            high=self.CDF_values[-1],
+        )
+        self.changes_array = self.inv_CDF_interp(self.CDF_rands_array)
 
     def evolve(self) -> None:
-        self._construct_rand_array()
+        self._construct_rands_array()
         self._construct_changes_array()
 
         (M, J, a_star, n, extremal, path), time = compute_evolution(
