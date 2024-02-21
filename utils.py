@@ -95,5 +95,22 @@ def timing(func):
         return result, time
     return wrapper
 
+def progress_bar(
+    iteration: int,
+    total: int,
+    prefix: str = '',
+    suffix: str = '',
+    decimals: int = 1,
+    length: int = 100,
+    fill: str = '█',
+    printEnd: str = "\r",
+):
+    percent = ("{0:." + str(decimals) + "f}").format(100.0 * iteration / total)
+    filled_length = int(length * iteration // total)
+    bar = fill * filled_length + '-' * (length - filled_length)
+    print(f'\r{prefix} |{bar}| {percent}% {suffix}', end = printEnd)
+    if iteration == total: 
+        print()
+
 if __name__ == "__main__":
     pass
