@@ -1,8 +1,7 @@
 import argparse
 import numpy as np
-import h5py
-
 import os
+import h5py
 
 from pbh import PrimordialBlackHole
 
@@ -25,14 +24,24 @@ if __name__ == "__main__":
         args.eps,
     )
 
-    N_PBH = 10000
+    N_PBH = 50000000
     zfill_len = int(np.log10(N_PBH)) + 1
 
     for i in range(N_PBH):
-        if i % 1000 == 0:
-            print(i)
-
         pbh.evolve()
+
+        if np.isnan(pbh.M_end) or np.isnan(pbh.J_end):
+            print(i)
+            print(pbh.N)
+            print(pbh.M_init)
+            print(pbh.J_init)
+            print(pbh.M_end)
+            print(pbh.J_end)
+            print(pbh.a_star_end)
+            print(pbh.n_steps)
+            print(pbh.extremal)
+            print(pbh.path)
+            break
 
         with open(os.path.join(
             os.path.dirname(os.path.realpath(__file__)),
