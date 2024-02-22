@@ -25,11 +25,11 @@ if __name__ == "__main__":
         args.eps,
     )
 
-    N_PBH = 10000
+    N_PBH = 1000000
     zfill_len = int(np.log10(N_PBH)) + 1
 
     for i in range(N_PBH):
-        if i % 1000 == 0:
+        if i % 100000 == 0:
             print(i)
 
         pbh.evolve()
