@@ -28,6 +28,8 @@ if __name__ == "__main__":
     zfill_len = int(np.log10(N_PBH)) + 1
 
     for i in range(N_PBH):
+        if i % 1000000 == 0: print(i)
+        
         pbh.evolve()
 
         if np.isnan(pbh.M_end) or np.isnan(pbh.J_end):
