@@ -51,4 +51,6 @@ def Hawking_temperature(spacetime: str) -> Callable:
         return Kerr_T
     else:
         raise NotImplementedError("This spacetime is not supported yet")
-    
+
+if __name__ == "__main__":
+    pass
