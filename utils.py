@@ -112,6 +112,7 @@ def progress_bar(
     print(f'\r{prefix} |{bar}| {percent}% {suffix}', end = printEnd)
     if iteration == total: 
         print()
+        
 
 if __name__ == "__main__":
     pass
