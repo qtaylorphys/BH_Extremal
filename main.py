@@ -24,7 +24,7 @@ if __name__ == "__main__":
         args.eps,
     )
 
-    N_PBH = 50000000
+    N_PBH = 100000000
     zfill_len = int(np.log10(N_PBH)) + 1
 
     for i in range(N_PBH):
@@ -47,9 +47,9 @@ if __name__ == "__main__":
 
         with open(os.path.join(
             os.path.dirname(os.path.realpath(__file__)),
-            f"results/test_M_{int(pbh.M_init)}.csv",
+            f"results/M_{int(pbh.M_init)}.csv",
         ), "a") as f:
-            f.write(f"{pbh.M_init},{pbh.J_init},{pbh.M_end},{pbh.J_end},{pbh.a_star_end},{pbh.n_steps},{int(pbh.extremal)},{pbh.computation_time:.3e}\n")
+            f.write(f"{pbh.M_init},{pbh.J_init},{pbh.M_end},{pbh.J_end},{pbh.a_star_end},{pbh.n_steps},{pbh.extremal},{pbh.computation_time:.3e}\n")
 
             if pbh.path is not None:
                 with h5py.File(f"./path{str(i).zfill(zfill_len)}.h5", 'w') as f:
