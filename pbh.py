@@ -112,18 +112,17 @@ def compute_evolution(
 
         if extremal: break
 
-        change = changes[i]
-
-        # print(i, M, J, a_star, rho_plus, T, rands[i], change)
-
-        M = M - change * T
+        M = M - changes[i] * T
 
         if rho_plus < rands[i]:
             J = J - 1
         else:
             J = J + 1
-
+        
         i += 1
+        
+        if i >= rands.size:
+            raise IndexError
 
     extremal *= 1
     n_steps = i + extremal
@@ -162,6 +161,9 @@ class PrimordialBlackHole(ABC):
         self.eps = eps
         self.save_path = save_path
 
+        self.rands_array = np.array([])
+        self.changes_array = np.array([])
+
         self.M_end = None
         self.J_end = None
         self.a_star_end = None
@@ -183,28 +185,46 @@ class PrimordialBlackHole(ABC):
         self.inv_CDF_interp = spip.CubicSpline(self.CDF_values, self.x_values)
 
     def _construct_rands_array(self) -> None:
-        self.rands_array = np.random.default_rng().uniform(size=self.N)
-
+        current_size = self.rands_array.size
+        delta_size = self.N - current_size
+        self.rands_array = np.append(
+            self.rands_array,
+            np.random.default_rng().uniform(size=delta_size),
+        )
+        
     def _construct_changes_array(self) -> None:
+        current_size = self.changes_array.size
+        delta_size = self.N - current_size
         self.CDF_rands_array = np.random.default_rng().uniform(
-            size=self.N,
+            size=delta_size,
             low=self.CDF_values[0] + 1e-18,
             high=self.CDF_values[-1],
         )
-        self.changes_array = self.inv_CDF_interp(self.CDF_rands_array)
+        self.changes_array = np.append(
+            self.changes_array,
+            self.inv_CDF_interp(self.CDF_rands_array)
+        )
 
     def evolve(self) -> None:
-        self._construct_rands_array()
-        self._construct_changes_array()
+        self.attempts = 1
+        while True:
+            self._construct_rands_array()
+            self._construct_changes_array()
 
-        (M, J, a_star, n, extremal, path), time = compute_evolution(
-            self.M_init, self.M_final,
-            self.J_init,
-            self.temperature_f,
-            self.changes_array, self.rands_array,
-            self.eps,
-            self.save_path,
-        )
+            try:
+                (M, J, a_star, n, extremal, path), time = compute_evolution(
+                    self.M_init, self.M_final,
+                    self.J_init,
+                    self.temperature_f,
+                    self.changes_array, self.rands_array,
+                    self.eps,
+                    self.save_path,
+                )
+                break
+            except IndexError:
+                extra_factor = 1.5
+                self.N = int(np.ceil(extra_factor * self.N))
+                self.attempts += 1
 
         self.M_end = M
         self.J_end = J
