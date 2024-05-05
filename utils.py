@@ -4,19 +4,19 @@ from dateutil.relativedelta import relativedelta as rd
 from time import process_time
 
 from numbers import Real, Integral
-from typing import Callable
+from typing import Text, Callable
 from nptyping import NDArray
 
-def binary_size(num: Real, suffix: str = "B") -> str:
+def binary_size(num: Real, suffix: Text = "B") -> Text:
     """
     Return human-readable string from file size in bytes
 
     Args:
     num (Real): the size of the file in bytes
-    suffix (str): the suffix to use after the units
+    suffix (Text): the suffix to use after the units
 
     Returns:
-    str: a human-readable string for the size of the file
+    Text: a human-readable string for the size of the file
     """
     for unit in ("", "Ki", "Mi", "Gi", "Ti", "Pi", "Ei", "Zi"):
         if abs(num) < 1024.0:
@@ -24,7 +24,7 @@ def binary_size(num: Real, suffix: str = "B") -> str:
         num /= 1024.0
     return f"{num:.1f} Yi{suffix}"
 
-def time_fmt(time_s: Real) -> str:
+def time_fmt(time_s: Real) -> Text:
     """
     Return a human-readable string from time interval in seconds
 
@@ -32,7 +32,7 @@ def time_fmt(time_s: Real) -> str:
     time_s (Real): the time interval in seconds
 
     Returns:
-    str: a human-readable string for the time interval
+    Text: a human-readable string for the time interval
     """
     intervals = ["days", "hours", "minutes", "seconds"]
     x = rd(seconds=time_s)
@@ -48,14 +48,14 @@ def time_fmt(time_s: Real) -> str:
         for val, interval in zip(vals, intervals) if val != 0
     )
 
-def save_data_h5(data: NDArray, filename: str, dataset_name: str) -> None:
+def save_data_h5(data: NDArray, filename: Text, dataset_name: Text) -> None:
     """
     Save a numpy array in an H5 file
 
     Args:
     data (NDArray): array to be saved to file
-    filename (str): path where the H5 file should be saved
-    dataset_name (str): string for the dataset name in the H5 file
+    filename (Text): path where the H5 file should be saved
+    dataset_name (Text): string for the dataset name in the H5 file
     """
     with h5py.File(filename, 'w') as f:
         f.create_dataset(
@@ -65,12 +65,12 @@ def save_data_h5(data: NDArray, filename: str, dataset_name: str) -> None:
             compression_opts=9,
         )
 
-def load_CDF_data(filename: str) -> NDArray:
+def load_CDF_data(filename: Text) -> NDArray:
     """
     Load the tabulated CDF function from an H5 file
 
     Args:
-    filename (str): path to the H5 file
+    filename (Text): path to the H5 file
 
     Returns:
     NDArray: the data in an array of shape (N, 2)
@@ -100,12 +100,12 @@ def timing(func: Callable) -> Callable:
 def progress_bar(
     iteration: Integral,
     total: Integral,
-    prefix: str = '',
-    suffix: str = '',
+    prefix: Text = '',
+    suffix: Text = '',
     decimals: Integral = 1,
     length: Integral = 100,
-    fill: str = '█',
-    print_end: str = "\r",
+    fill: Text = '█',
+    print_end: Text = "\r",
 ) -> None:
     """
     Print a progress bar to track the progress of an iteration.
@@ -113,15 +113,15 @@ def progress_bar(
     Args:
     iteration (int): Current iteration.
     total (int): Total number of iterations.
-    prefix (str, optional): Prefix string to display (default is '').
-    suffix (str, optional): Suffix string to display (default is '').
+    prefix (Text, optional): Prefix string to display (default is '').
+    suffix (Text, optional): Suffix string to display (default is '').
     decimals (int, optional): Number of decimal places to display in percentage 
         (default is 1).
     length (int, optional): Length of the progress bar in characters (default 
         is 100).
-    fill (str, optional): Character used to fill the progress bar (default is 
+    fill (Text, optional): Character used to fill the progress bar (default is 
         '█').
-    print_end (str, optional): String to end the print statement with (default 
+    print_end (Text, optional): String to end the print statement with (default 
         is "\\r").
 
     Returns:
