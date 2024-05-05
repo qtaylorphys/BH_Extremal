@@ -3,14 +3,15 @@ import numpy as np
 from dateutil.relativedelta import relativedelta as rd
 from time import process_time
 
-from numbers import Real
+from numbers import Real, Integral
+from typing import Callable
 from nptyping import NDArray
 
 def binary_size(num: Real, suffix: str = "B") -> str:
     """
     Return human-readable string from file size in bytes
 
-    Parameters:
+    Args:
     num (Real): the size of the file in bytes
     suffix (str): the suffix to use after the units
 
@@ -27,7 +28,7 @@ def time_fmt(time_s: Real) -> str:
     """
     Return a human-readable string from time interval in seconds
 
-    Parameters:
+    Args:
     time_s (Real): the time interval in seconds
 
     Returns:
@@ -51,7 +52,7 @@ def save_data_h5(data: NDArray, filename: str, dataset_name: str) -> None:
     """
     Save a numpy array in an H5 file
 
-    Parameters:
+    Args:
     data (NDArray): array to be saved to file
     filename (str): path where the H5 file should be saved
     dataset_name (str): string for the dataset name in the H5 file
@@ -68,7 +69,7 @@ def load_CDF_data(filename: str) -> NDArray:
     """
     Load the tabulated CDF function from an H5 file
 
-    Parameters:
+    Args:
     filename (str): path to the H5 file
 
     Returns:
@@ -78,11 +79,11 @@ def load_CDF_data(filename: str) -> NDArray:
         CDF_data = f["CDF_data"][:]
     return CDF_data
 
-def timing(func):
+def timing(func: Callable) -> Callable:
     """
     Decorator for measuring execution time of functions
 
-    Parameters:
+    Args:
     func (Callable): the function to be timed
 
     Returns:
@@ -97,19 +98,40 @@ def timing(func):
     return wrapper
 
 def progress_bar(
-    iteration: int,
-    total: int,
+    iteration: Integral,
+    total: Integral,
     prefix: str = '',
     suffix: str = '',
-    decimals: int = 1,
-    length: int = 100,
+    decimals: Integral = 1,
+    length: Integral = 100,
     fill: str = '█',
-    printEnd: str = "\r",
-):
+    print_end: str = "\r",
+) -> None:
+    """
+    Print a progress bar to track the progress of an iteration.
+
+    Args:
+    iteration (int): Current iteration.
+    total (int): Total number of iterations.
+    prefix (str, optional): Prefix string to display (default is '').
+    suffix (str, optional): Suffix string to display (default is '').
+    decimals (int, optional): Number of decimal places to display in percentage 
+        (default is 1).
+    length (int, optional): Length of the progress bar in characters (default 
+        is 100).
+    fill (str, optional): Character used to fill the progress bar (default is 
+        '█').
+    print_end (str, optional): String to end the print statement with (default 
+        is "\\r").
+
+    Returns:
+    None: This function does not return anything, it only prints the progress 
+        bar.
+    """
     percent = ("{0:." + str(decimals) + "f}").format(100.0 * iteration / total)
     filled_length = int(length * iteration // total)
     bar = fill * filled_length + '-' * (length - filled_length)
-    print(f'\r{prefix} |{bar}| {percent}% {suffix}', end = printEnd)
+    print(f"\r{prefix} |{bar}| {percent}% {suffix}", end=print_end)
     if iteration == total: 
         print()
         
