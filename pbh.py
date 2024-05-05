@@ -12,7 +12,7 @@ from temperature import Hawking_temperature
 
 from numbers import Real, Integral
 from typing import Tuple, Callable
-from nptyping import NDArray
+from nptyping import NDArray, Bool
 
 
 @nb.njit(fastmath = True)
@@ -43,7 +43,7 @@ def compute_evolution(
     changes: NDArray,
     rands: NDArray,
     eps: Real = 1,
-    return_path: bool = False,
+    return_path: Bool = False,
 ) -> Tuple:
     """
     Compute the evolution of a (primordial) black hole as it evaporates due 
@@ -60,7 +60,7 @@ def compute_evolution(
     rands (NDArray):
     eps (Real): tuning parameter used to control the deviation from even
         probability (1/2); use eps = 1. for production results
-    return path (bool): if True, will return the evolution of M, J, a_star, 
+    return_path (bool): if True, will return the evolution of M, J, a_star, 
         rho_plus, T, as well as the rands and changes arrays
 
     Returns:
@@ -144,7 +144,7 @@ class PrimordialBlackHole(ABC):
         M_final: Real = 1,
         J_init: Real = 0,
         eps: Real = 1,
-        save_path: bool = False,
+        save_path: Bool = False,
     ) -> None:
         self.spacetime = spacetime
         self.M_init = M_init
