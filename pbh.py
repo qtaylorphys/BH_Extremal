@@ -16,14 +16,6 @@ from nptyping import NDArray
 
 
 @nb.njit(fastmath = True)
-def compute_interp(f, x):
-    y = x.argsort()
-    z = f(x[y])
-    i = np.empty_like(y)
-    i[y] = np.arange(y.size)
-    return z[i]
-
-@nb.njit(fastmath = True)
 def compute_rho(a_star: Real, eps: Real = 1.) -> Real:
     """
     Compute the probability that the black hole spin will increase
