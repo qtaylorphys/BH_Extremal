@@ -11,7 +11,7 @@ from predict_size import predict_size
 from temperature import Hawking_temperature
 
 from numbers import Real, Integral
-from typing import Tuple, Callable
+from typing import Tuple, Callable, Text
 from nptyping import NDArray, Bool
 
 
@@ -141,7 +141,7 @@ class PrimordialBlackHole(ABC):
 
     def __init__(
         self,
-        spacetime: str,
+        spacetime: Text,
         M_init: Real,
         M_final: Real = 1,
         J_init: Real = 0,
