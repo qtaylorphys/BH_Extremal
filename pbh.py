@@ -185,7 +185,7 @@ class PrimordialBlackHole(ABC):
 
         CDF_data = load_CDF_data(os.path.join(
             os.path.dirname(os.path.realpath(__file__)),
-            "CDF_data.h5",
+            "data/CDF_data.h5",
         ))
         self.CDF_values = CDF_data[:, 0]
         self.x_values = CDF_data[:, 1]

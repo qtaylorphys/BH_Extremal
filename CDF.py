@@ -104,7 +104,7 @@ if __name__ == "__main__":
     
     CDF_data = np.stack((CDF_vals, x_vals), axis=-1)
 
-    save_data_h5(CDF_data, "CDF_data.h5", "CDF_data")
+    save_data_h5(CDF_data, "data/CDF_data.h5", "CDF_data")
 
     file_stats = os.stat("CDF_data.h5")
     file_size = binary_size(file_stats.st_size)
@@ -114,8 +114,8 @@ if __name__ == "__main__":
         inv_CDF_interp = spip.CubicSpline(CDF_vals, x_vals)
         interp_coeffs = inv_CDF_interp.c
 
-        save_data_h5(interp_coeffs.T, "CDF_coeffs.h5", "CDF_coeffs")
+        save_data_h5(interp_coeffs.T, "data/CDF_coeffs.h5", "CDF_coeffs")
 
-        file_stats = os.stat("CDF_coeffs.h5")
+        file_stats = os.stat("data/CDF_coeffs.h5")
         file_size = binary_size(file_stats.st_size)
         print(f"Saved interpolation coeffs in file CDF_coeffs.h5 with size {file_size}")
