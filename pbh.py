@@ -36,8 +36,8 @@ def compute_rho(a_star: Real, eps: Real = 1.) -> Real:
 @timing
 @nb.njit(fastmath = True)
 def compute_evolution(
-    M_init: float,
-    M_final: float,
+    M_init: Real,
+    M_final: Real,
     J_init: Integral,
     compute_T: Callable,
     changes: NDArray,
