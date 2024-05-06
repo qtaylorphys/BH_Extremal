@@ -18,8 +18,8 @@ def predict_size(M: Real, extra_factor: Real = 1.) -> Integral:
     Returns:
     Integral: the predicted size for the arrays
     """
-    log_log_intercept = 0.6643894764405784
-    log_log_coef = 2.0030406770689377
+    log_log_intercept = 0.9047453665680507
+    log_log_coef = 1.8887302271911939
 
     log_M = np.log10(M)
     log_N_predict = log_log_intercept + log_log_coef * log_M
