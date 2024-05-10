@@ -3,7 +3,7 @@ from scipy.special import zeta
 
 from numbers import Real
 
-def P_ext(M_ext: Real, A: Real = None) -> Real:
+def P_c(M_ext: Real, A: Real = None) -> Real:
     """
     Calculate the probability distribution of the mass of an extremal 
     primordial black hole. Implements Eq. (13) of arXiv:2403.04054.
