@@ -16,8 +16,8 @@ def P_c(M_ext: Real, A: Real = None) -> Real:
     Real: The probability distribution of the mass.
 
     Notes:
-        - Requires numpy to be imported.
-        - If A is not provided, a default normalization factor is used.
+    - Requires numpy to be imported.
+    - If A is not provided, a default normalization factor is used.
     """
     γ = np.pi**4 / (30 * zeta(3))
     κ = 8 * np.sqrt(np.pi) / γ
