@@ -230,6 +230,8 @@ class PrimordialBlackHole(ABC):
         This method evolves the black hole until it reaches its final 
         state.
         """
+        self.rands_array = np.array([])
+        self.changes_array = np.array([])
         self.attempts = 1
         while True:
             self._construct_rands_array()
